@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/ag_downloader"
+
+cmd = AgDownloader::Options.new
+cmd.parse
+cmd.run
+

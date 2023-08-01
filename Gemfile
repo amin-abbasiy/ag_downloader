@@ -6,8 +6,14 @@ ruby ">= 3.2.2"
 # Specify your gem's dependencies in ag_downloader.gemspec
 gemspec
 
+# create tasks
 gem "rake", "~> 13.0"
 
+# testing
 gem "rspec", "~> 3.0"
 
+# code linting
 gem "rubocop", "~> 1.21"
+
+# command line interface
+gem 'tty-option', '~> 0.3.0'
