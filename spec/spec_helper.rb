@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "ag_downloader"
+require_relative '../lib/ag_downloader'
+require_relative '../lib/ag_downloader/validations'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

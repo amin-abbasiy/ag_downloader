@@ -18,7 +18,7 @@ RSpec.describe AgDownloader::Options do
   context 'when valid data provided' do
     it 'file provided' do
       ARGV.clear
-      ARGV.concat %w[file.txt]
+      ARGV.concat [File.expand_path('spec/fixtures/valid_file.txt')]
 
       described_class.new.parse.run
 
@@ -42,6 +42,15 @@ RSpec.describe AgDownloader::Options do
       described_class.new.parse.run
 
       expect($stdout.string).to include("Error: argument 'file' must be provided")
+    end
+
+    it 'file does not exist' do
+      ARGV.clear
+      ARGV.concat %w[not_exist_file.txt]
+
+      described_class.new.parse.run
+
+      expect($stdout.string).to include("File does not exist")
     end
   end
 end

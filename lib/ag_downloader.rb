@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "ag_downloader/version"
+require_relative 'ag_downloader/validations'
 require 'tty-option'
 
 module AgDownloader
   class Options
     include TTY::Option
+    include ::AgDownloader::Validations
 
     usage do
       program "ag"
@@ -32,12 +34,16 @@ module AgDownloader
       if params[:help]
         puts help
       elsif params[:file]
+        validate_file(file: params[:file])
         puts "Downloading..."
       elsif params.errors.any?
         puts params.errors.summary
       else
         puts params.to_h
       end
+
+    rescue InvalidFileError => e
+      puts e
     end
   end
 end
