@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require_relative "spec_helper"
 
-RSpec.describe AgDownloader do
+RSpec.describe AgDownloader::Options do
   it "has a version number" do
     expect(AgDownloader::VERSION).not_to be nil
   end

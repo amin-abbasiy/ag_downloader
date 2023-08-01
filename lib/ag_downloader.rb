@@ -3,43 +3,41 @@
 require_relative "ag_downloader/version"
 require 'tty-option'
 
-class AgDownloader
-  include TTY::Option
+module AgDownloader
+  class Options
+    include TTY::Option
 
-  usage do
-    program "ag"
+    usage do
+      program "ag"
 
-    command 'download'
+      command ''
 
-    desc "Get file and download images from urls inside the file"
+      desc "Get file and download images from urls inside the file"
 
-    example "$ ag download `path/to/file`"
-  end
+      example "$ ag download `path/to/file`"
+    end
 
-  argument :file do
-    required
-    desc "The name of the file to use"
-  end
+    argument :file do
+      required
+      desc "The name of the file to use"
+    end
 
-  flag :help do
-    short "-h"
-    long "--help"
-    desc "Print usage"
-  end
+    flag :help do
+      short "-h"
+      long "--help"
+      desc "Print usage"
+    end
 
-  def run
-    if params[:help]
-      puts help
-    elsif params[:file]
-      puts "Downloading..."
-    elsif params.errors.any?
-      puts params.errors.summary
-    else
-      puts params.to_h
+    def run
+      if params[:help]
+        puts help
+      elsif params[:file]
+        puts "Downloading..."
+      elsif params.errors.any?
+        puts params.errors.summary
+      else
+        puts params.to_h
+      end
     end
   end
 end
-
-cmd = AgDownloader.new
-cmd.parse
-cmd.run
