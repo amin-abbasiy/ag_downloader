@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../spec_helper'
 
 RSpec.describe AgDownloader::Validations do
@@ -5,12 +7,12 @@ RSpec.describe AgDownloader::Validations do
   let(:klass_object) { klass.new }
 
   describe '#validate_file' do
-    let(:valid_file) { File.expand_path("spec/fixtures/valid_file.txt") }
+    let(:valid_file) { File.expand_path('spec/fixtures/valid_file.txt') }
     let(:invalid_file) { File.expand_path('spec/fixtures/invalid_file.txt') }
 
     context 'when file provided' do
       it 'returns true' do
-        expect(klass_object.validate_file(file: valid_file)).to eq(nil)
+        expect(klass_object.validate_file(file: valid_file)).to eq(true)
       end
     end
 
@@ -27,7 +29,7 @@ RSpec.describe AgDownloader::Validations do
 
     context 'when url provided' do
       it 'returns true' do
-        expect(klass_object.validate_url(url: valid_url)).to eq(nil)
+        expect(klass_object.validate_url(url: valid_url)).to eq(true)
       end
     end
 
