@@ -5,9 +5,11 @@ require 'webmock/rspec'
 
 RSpec.describe AgDownloader::Http do
   let(:url) { 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png' }
+  let(:stub_url) { 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png' }
+
   let(:http) { described_class.new(url:) }
 
-  describe 'Http successful' do
+  context 'Http successful' do
     it 'returns a URI object for the given URL' do
       expect(http.uri).to be_a(URI)
       expect(http.uri.to_s).to eq(url)
@@ -16,10 +18,13 @@ RSpec.describe AgDownloader::Http do
     it 'returns a Net::HTTP::Get request object' do
       expect(http.get).to be_a(Net::HTTP::Get)
     end
+
+    it 'returns a Net::HTTP::Get request object' do
+      expect(http.head).to be_a(Net::HTTP::Head)
+    end
   end
 
-  context 'Successful request' do
-    let(:stub_url) { 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png' }
+  context 'GET Successful request' do
     let(:image_path) { File.expand_path('spec/fixtures/Image_created_with_a_mobile_phone.png') }
     let(:image_data) { File.open(image_path, 'rb', &:read) }
 
@@ -28,7 +33,7 @@ RSpec.describe AgDownloader::Http do
         .to_return(status: 200, body: image_data, headers: {})
     end
 
-    it 'sends a GET request to the provided URL' do
+    it 'sends a request to the provided URL' do
       response = http.send_request(method: :get)
 
       expect(response.code).to eq('200')
@@ -39,6 +44,27 @@ RSpec.describe AgDownloader::Http do
       yielded = false
       http.send_request(method: :get) do |response|
         expect(response.body).to eq(image_data)
+        yielded = true
+      end
+      expect(yielded).to be_truthy
+    end
+  end
+
+  context 'HEAD Successful request' do
+    before do
+      stub_request(:head, stub_url)
+        .to_return(status: 200)
+    end
+
+    it 'sends a request to the provided URL' do
+      response = http.send_request(method: :head)
+
+      expect(response.code).to eq('200')
+    end
+
+    it 'yields the response to a provided block' do
+      yielded = false
+      http.send_request(method: :head) do
         yielded = true
       end
       expect(yielded).to be_truthy

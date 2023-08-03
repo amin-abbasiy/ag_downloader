@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'net/http'
+
 module AgDownloader
-  ## Path: lib/ag_downloader/validations.rb
+  ## Path: lib/ag_downloader/http.rb
   # Class to work with http requests
   # Class includes methods to start http request and send http request
   #
@@ -15,6 +17,8 @@ module AgDownloader
   #
   # Returns:
   #   Net::HTTP.start
+  #   Net::HTTP::Get
+  #   Net::HTTP::Head
   #
   # @param url [String] url to download from
   # @param method [Symbol] http method to use
@@ -36,9 +40,13 @@ module AgDownloader
       Net::HTTP::Get.new(uri)
     end
 
+    def head
+      Net::HTTP::Head.new(uri)
+    end
+
     def send_request(method:, &block)
       start.request(public_send(method)) do |response|
-        raise ::Net::HTTPServerException 'message' unless response.is_a?(Net::HTTPSuccess)
+        raise Net::HTTPServerException 'message' unless response.is_a?(Net::HTTPSuccess)
 
         block.call(response) if block_given?
       end
