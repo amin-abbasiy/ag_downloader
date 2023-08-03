@@ -14,7 +14,9 @@ module AgDownloader
   #   klass.parse
   #   klass.run
   #
-  # @param file [String] path to file
+  # @param source [String] path to file or url
+  # @param url [Boolean] flag to indicate url
+  # @param file [Boolean] flag to indicate file
   # @param help [Boolean] print usage
   class Options
     include TTY::Option
@@ -28,12 +30,13 @@ module AgDownloader
 
       desc 'Get file and download images from urls inside the file'
 
-      example '$ ag download `path/to/file`'
+      example '$ ag download -f `path/to/file`'
+      example '$ ag download -u `https://www.example.com`'
     end
 
-    argument :file do
+    argument :source do
       required
-      desc 'The name of the file to use'
+      desc 'Source to download from'
     end
 
     flag :help do
@@ -42,22 +45,38 @@ module AgDownloader
       desc 'Print usage'
     end
 
+    flag :url do
+      short '-u'
+      long '--url'
+      desc 'url containing urls of images'
+    end
+
+    flag :file do
+      short '-f'
+      long '--file'
+      desc 'local file containing urls of images'
+    end
+
     def download
-      validate_file(file: params[:file])
-      urls = batch_read(filepath: params[:file])
-      urls.each { |url| validate_url(url:) }
-      ::AgDownloader::Download.new.batch_download(urls:)
+      type = :url if params[:url]
+      type = :file if params[:file]
+      urls = batch_read(source: params[:source], type:)
+      urls = urls.map { |url| validates(url, type: :url) }
+      down = ::AgDownloader::Download.new
       puts 'Downloading...'
+      down.batch_download(urls:)
     end
 
     # rubocop:disable Metrics/AbcSize
     def run
       puts help if params[:help]
-      download if params[:file]
-      puts params.errors.summary if params.errors.any?
+      download if params[:source]
+      puts params.errors.summary if params&.errors&.any?
     rescue AgDownloader::InvalidFileError => e
       puts e
     rescue AgDownloader::InvalidUrlError => e
+      puts e
+    rescue AgDownloader::InvalidSourceError => e
       puts e
     rescue SocketError => e
       puts e

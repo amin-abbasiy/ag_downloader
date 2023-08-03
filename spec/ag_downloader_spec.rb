@@ -3,45 +3,88 @@
 require_relative 'spec_helper'
 
 RSpec.describe AgDownloader::Options do
+  let(:options) { described_class.new }
+
   it 'has a version number' do
     expect(AgDownloader::VERSION).not_to be nil
   end
 
-  before do
-    @original_stdout = $stdout
-    $stdout = StringIO.new
-  end
-
-  after do
-    $stdout = @original_stdout
-  end
-  context 'when valid data provided' do
-    it 'help flag provided' do
-      ARGV.clear
-      ARGV.concat %w[--help]
-
-      described_class.new.parse.run
-
-      expect($stdout.string).to include('Usage: ag  [OPTIONS] FILE')
-    end
-  end
-
-  context 'when invalid data provided' do
-    it 'file does not provided' do
-      ARGV.clear
-
-      described_class.new.parse.run
-
-      expect($stdout.string).to include("Error: argument 'file' must be provided")
+  describe 'cmd options' do
+    before do
+      @original_stdout = $stdout
+      $stdout = StringIO.new
     end
 
-    it 'file does not exist' do
-      ARGV.clear
-      ARGV.concat %w[not_exist_file.txt]
+    after { $stdout = @original_stdout }
 
-      described_class.new.parse.run
+    context 'when valid data provided' do
+      it 'help flag provided' do
+        ARGV.clear
+        ARGV.concat %w[--help]
 
-      expect($stdout.string).to include('File does not exist')
+        described_class.new.parse.run
+
+        expect($stdout.string).to include('Usage: ag  [OPTIONS] SOURCE')
+      end
+    end
+
+    context 'when invalid data provided' do
+      it 'source does not provided' do
+        ARGV.clear
+
+        described_class.new.parse.run
+
+        expect($stdout.string).to include("Error: argument 'source' must be provided")
+      end
+
+      it 'file in local machine does not exist' do
+        ARGV.clear
+        ARGV.concat %w[-f not_exist_file.txt]
+
+        described_class.new.parse.run
+
+        expect($stdout.string).to include('File does not exist')
+      end
+
+      it 'file in the host does not exist' do
+        ARGV.clear
+        ARGV.concat %w[-u some_invalid_url]
+
+        described_class.new.parse.run
+
+        expect($stdout.string).to include('some_invalid_url` is not a valid URL')
+      end
+    end
+
+    context '#download' do
+      let(:params) { { source: 'https://example.com/file.txt', url: true } }
+      let(:urls) { %w[http://example.com/image1.jpg http://example.com/image2.jpg] }
+
+      before do
+        allow(options).to receive(:params).and_return(params)
+        allow(options).to receive(:batch_read).and_return(urls)
+        allow(options).to receive(:validates).and_return(true)
+        allow(::AgDownloader::Download).to receive_message_chain(:new, :batch_download)
+      end
+
+      it 'downloads urls from a source' do
+        expect(options).to receive(:batch_read).with(source: 'https://example.com/file.txt', type: :url)
+        expect(options).to receive(:validates).twice
+        expect(::AgDownloader::Download).to receive_message_chain(:new, :batch_download)
+        options.download
+      end
+    end
+
+    context '#run' do
+      before do
+        allow(options).to receive(:puts)
+        allow(options).to receive(:help)
+        allow(options).to receive(:download)
+      end
+
+      it 'runs without errors' do
+        expect { options.run }.not_to raise_error
+      end
     end
   end
 end
