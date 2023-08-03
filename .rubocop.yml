@@ -17,3 +17,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'db/**/*'
     - 'config/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/ag_downloader.rb'
