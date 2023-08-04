@@ -40,6 +40,8 @@ module AgDownloader
 
     def validate_source_types(type:)
       raise AgDownloader::InvalidSourceError, "`#{type}` Source is not valid" unless VALID_SOURCE_TYPES.include?(type)
+
+      true
     end
 
     def validate_url(url:)

@@ -41,18 +41,18 @@ RSpec.describe AgDownloader::Options do
         ARGV.clear
         ARGV.concat %w[-f not_exist_file.txt]
 
-        described_class.new.parse.run
+        expect_any_instance_of(AgDownloader::Logger).to receive(:error).with('`not_exist_file.txt` File does not exist')
 
-        expect($stdout.string).to include('File does not exist')
+        described_class.new.parse.run
       end
 
       it 'file in the host does not exist' do
         ARGV.clear
         ARGV.concat %w[-u some_invalid_url]
 
-        described_class.new.parse.run
+        expect_any_instance_of(AgDownloader::Logger).to receive(:error).with('`some_invalid_url` is not a valid URL')
 
-        expect($stdout.string).to include('some_invalid_url` is not a valid URL')
+        described_class.new.parse.run
       end
     end
 

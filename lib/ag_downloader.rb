@@ -4,6 +4,7 @@ require_relative 'ag_downloader/version'
 require_relative 'ag_downloader/validations'
 require_relative 'ag_downloader/download'
 require_relative 'ag_downloader/util'
+require_relative 'ag_downloader/logging'
 require 'tty-option'
 
 module AgDownloader
@@ -22,6 +23,7 @@ module AgDownloader
     include TTY::Option
     include ::AgDownloader::Validations
     include ::AgDownloader::Util
+    include ::AgDownloader::Logging
 
     usage do
       program 'ag'
@@ -57,31 +59,35 @@ module AgDownloader
       desc 'local file containing urls of images'
     end
 
+    # rubocop:disable Metrics/AbcSize
     def download
       type = :url if params[:url]
       type = :file if params[:file]
+      logger.info('Reading and Validating the source file...')
       urls = batch_read(source: params[:source], type:)
       urls = urls.map { |url| validates(url, type: :url) }
+      logger.info('Read file and ready to download')
       down = ::AgDownloader::Download.new
-      puts 'Downloading...'
+      logger.info('Downloading...')
       down.batch_download(urls:)
     end
 
-    # rubocop:disable Metrics/AbcSize
     def run
       puts help if params[:help]
       download if params[:source]
       puts params.errors.summary if params&.errors&.any?
     rescue AgDownloader::InvalidFileError => e
-      puts e
+      logger.error(e.message)
     rescue AgDownloader::InvalidUrlError => e
-      puts e
+      logger.error(e.message)
     rescue AgDownloader::InvalidSourceError => e
-      puts e
+      logger.error(e.message)
     rescue SocketError => e
-      puts e
+      logger.error(e.message)
     rescue Net::ReadTimeout => e
-      puts e
+      logger.error(e.message)
+    rescue ArgumentError => e
+      logger.error(e.message)
     end
     # rubocop:enable Metrics/AbcSize
   end

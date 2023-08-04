@@ -5,6 +5,8 @@ require_relative '../lib/ag_downloader/validations'
 require_relative '../lib/ag_downloader/download'
 require_relative '../lib/ag_downloader/util'
 require_relative '../lib/ag_downloader/http'
+require_relative '../lib/ag_downloader/logger'
+require_relative '../lib/ag_downloader/logging'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

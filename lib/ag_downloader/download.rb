@@ -3,12 +3,15 @@
 require 'open-uri'
 require 'tty-progressbar'
 require_relative 'http'
+require_relative 'logging'
 
 module AgDownloader
   ## Path: lib/ag_downloader/download.rb
   # Class includes methods to download files concurrently
   # Class is thread safe and uses mutex to synchronize threads is shard resources
   # Class includes methods to download files and show progress bar
+  # Raises:
+  #  ArgumentError if url is not a valid url
   #
   # Example:
   #   klass = AgDownloader::Download.new
@@ -16,6 +19,7 @@ module AgDownloader
   #
   # @param urls [Array] array of urls to download
   class Download
+    include ::AgDownloader::Logging
     def initialize
       @mutex = Mutex.new
       @bars = TTY::ProgressBar::Multi.new('main [:bar] :percent')
@@ -27,6 +31,8 @@ module AgDownloader
         @threads << Thread.new do
           http = AgDownloader::Http.new(url:)
           download(http:)
+        rescue ArgumentError
+          logger.error("`#{url}` is not a valid URL")
         end
       end
 
