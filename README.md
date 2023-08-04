@@ -11,7 +11,6 @@ Please Note: System uses ruby 3.2.2 syntax, if you run it in lower version of ru
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Standalone](#standalone)
-    - [In your application](#in-your-application)
   - [Usage](#usage)
   - [Development](#development)
   - [Next Version Improvements](#next-version-improvements)
