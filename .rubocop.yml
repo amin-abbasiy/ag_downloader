@@ -17,6 +17,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'db/**/*'
     - 'config/**/*'
+    - 'ag_downloader.gemspec'
 
 Metrics/MethodLength:
   Exclude:
