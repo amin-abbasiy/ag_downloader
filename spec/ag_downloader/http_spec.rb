@@ -4,8 +4,8 @@ require_relative '../spec_helper'
 require 'webmock/rspec'
 
 RSpec.describe AgDownloader::Http do
-  let(:url) { 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png' }
-  let(:stub_url) { 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png' }
+  let(:url) { 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Puncakjaya.jpg' }
+  let(:stub_url) { 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Puncakjaya.jpg' }
 
   let(:http) { described_class.new(url:) }
 
@@ -25,7 +25,7 @@ RSpec.describe AgDownloader::Http do
   end
 
   context 'GET Successful request' do
-    let(:image_path) { File.expand_path('spec/fixtures/Image_created_with_a_mobile_phone.png') }
+    let(:image_path) { File.expand_path('spec/fixtures/Puncakjaya.jpg') }
     let(:image_data) { File.open(image_path, 'rb', &:read) }
 
     before do

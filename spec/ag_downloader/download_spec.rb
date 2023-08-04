@@ -5,7 +5,7 @@ require_relative '../spec_helper'
 RSpec.describe AgDownloader::Download do
   let(:http_instance) { instance_double('AgDownloader::Http') }
   let(:response) { instance_double('Net::HTTPResponse') }
-  let(:urls) { %w[https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png https://upload.wikimedia.org/wikipedia/commons/f/fe/Chris_Woakes_2022.jpg] }
+  let(:urls) { %w[https://upload.wikimedia.org/wikipedia/commons/3/3f/Puncakjaya.jpg https://upload.wikimedia.org/wikipedia/commons/3/3f/Puncakjaya.jpg] }
   let(:download_instance) { described_class.new }
 
   before do
@@ -24,7 +24,7 @@ RSpec.describe AgDownloader::Download do
     it 'returns the filename from the url' do
       filename = download_instance.filename(http: http_instance)
 
-      expect(filename).to eq('Image_created_with_a_mobile_phone.png')
+      expect(filename).to eq('Puncakjaya.jpg')
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe AgDownloader::Download do
     end
 
     it 'opens a file and writes to it' do
-      file_path = File.expand_path('spec/fixtures/Image_created_with_a_mobile_phone.png')
+      file_path = File.expand_path('spec/fixtures/Puncakjaya.jpg')
 
       download_instance.download(http: http_instance)
 
