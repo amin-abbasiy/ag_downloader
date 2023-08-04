@@ -19,7 +19,7 @@ module AgDownloader
   # @param url [Boolean] flag to indicate url
   # @param file [Boolean] flag to indicate file
   # @param help [Boolean] print usage
-  class Options
+  class CLI
     include TTY::Option
     include ::AgDownloader::Validations
     include ::AgDownloader::Util

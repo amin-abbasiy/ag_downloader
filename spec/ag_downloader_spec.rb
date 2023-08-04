@@ -2,7 +2,7 @@
 
 require_relative 'spec_helper'
 
-RSpec.describe AgDownloader::Options do
+RSpec.describe AgDownloader::CLI do
   let(:options) { described_class.new }
 
   it 'has a version number' do
