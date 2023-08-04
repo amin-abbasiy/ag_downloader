@@ -65,7 +65,7 @@ module AgDownloader
       type = :file if params[:file]
       logger.info('Reading and Validating the source file...')
       urls = batch_read(source: params[:source], type:)
-      urls = urls.map { |url| validates(url, type: :url) }
+      urls.map { |url| validates(url, type: :url) }
       logger.info('Read file and ready to download')
       down = ::AgDownloader::Download.new
       logger.info('Downloading...')
