@@ -2,13 +2,12 @@
 
 Welcome to AgDownloader! This library is a simple cmd tool to download images concurrently and thread-safe
 
-System uses ruby 3.2.2 syntax, if you run it in lower version of ruby it will raise syntax error.
+Please Note: System uses ruby 3.2.2 syntax, if you run it in lower version of ruby it will raise syntax error.
 
 ## Table of Contents
 
   - [Solution](#solution)
   - [Considerations](#considerations)
-  - [Features](#features)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Standalone](#standalone)
@@ -45,8 +44,22 @@ System Divided into modules and classes and each component has a single responsi
 
 ### Standalone
 
-There is already a build of application in the root directory of the project. so you can install it locally.
-Clone the repository and run:
+Start a new Bash shell in login mode:
+
+```bash
+$ /bin/bash --login
+```
+
+Login shell loads system-wide settings from /etc/profile and then looks for the first readable file among `~/.bash_profile`, `~/.bash_login`, and `~/.profile`, loading its settings.
+This way you can make sure all executables are available and environment variables are set.
+
+Clone the repository and for build run:
+
+```bash
+$ gem build ag_downloader.gemspec
+```
+
+Then to install the gem run:
 
 ```bash
 $ gem install ag_downloader-0.1.0.gem
@@ -54,16 +67,6 @@ $ gem install ag_downloader-0.1.0.gem
 
 You are all set to use the application. refer to [Usage](#usage) section for more information.
 
-### In your application
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'ag_downloader'
-```
-or install it yourself as:
-
-    $ gem install ag_downloader
 
 ## Usage
 
